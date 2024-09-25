@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  safebasefront:
+    container_name: safebasefront
+    build:
+      context: ./safebasefront
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./safebasefront:/usr/src/app/safebasefront
+      - /usr/src/app/safebasefront/node_modules
+    depends_on:
+      - safebasefastify
+
+  safebasefastify:
+    container_name: safebasefastify
+    build:
+      context: ./SafebaseBack # Chemin du dossier Fastify
+    command: node index.js
+    ports:
+      - "3001:3001"
+    environment:
+      POSTGRES_USER: safebase
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: safebase
+      MYSQL_USER: prod
+      MYSQL_PASSWORD: pass
+      MYSQL_DATABASE: prod
+    volumes:
+      - ./SafebaseBack:/usr/src/app/SafebaseBack
+    depends_on:
+      - postgres_database_version
+      - mysql_database_prod
+
+  postgres_database_version:
+    image: 'postgres'
+    environment:
+      POSTGRES_PASSWORD: pass
+      POSTGRES_USER: safebase
+      POSTGRES_DB: safebase
+    ports:
+      - '5434:5432'
+    volumes:
+      - pgdata_version:/var/lib/postgresql/data
+
+  postgres_database_dev:
+    image: 'postgres'
+    environment:
+      POSTGRES_PASSWORD: pass
+      POSTGRES_USER: dev
+      POSTGRES_DB: dev
+    ports:
+      - '5433:5432'
+    volumes:
+      - pgdata_dev:/var/lib/postgresql/data
+    depends_on:
+      - postgres_database_version
+
+  mysql_database_prod:
+    image: 'mysql:8.0'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: prod
+      MYSQL_USER: prod
+      MYSQL_PASSWORD: pass
+    ports:
+      - '3307:3306'
+    volumes:
+      - mysql_prod:/var/lib/mysql
+    depends_on:
+      - postgres_database_dev
+
+  adminer:
+    image: adminer
+    environment:
+      - UPLOAD_LIMIT=100M
+    restart: always
+    ports:
+      - '9080:8080'
+    depends_on:
+      - postgres_database_version
+      - postgres_database_dev
+      - mysql_database_prod
+
+volumes:
+  pgdata_version:
+  pgdata_dev:
+  mysql_prod:
