@@ -1,0 +1,3 @@
+[submodule "SafebaseBack"]
+    path = SafebaseBack
+    url = https://github.com/morgane-marechal/SafebaseBack.git
