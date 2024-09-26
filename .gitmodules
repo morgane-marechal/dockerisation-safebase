@@ -1,6 +1,6 @@
 [submodule "SafebaseBack"]
     path = SafebaseBack
     url = https://github.com/morgane-marechal/SafebaseBack.git
-[submodule "safebasefront"]
+[submodule "SafebaseFront"]
 	path = safebasefront
-	url = https://github.com/morgane-marechal/Safebasefront.git
+	url = https://github.com/morgane-marechal/SafebaseFront.git
