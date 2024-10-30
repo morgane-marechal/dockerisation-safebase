@@ -24,4 +24,4 @@ jobs:
           -d '{
             "text": "🚀 Notification from GitHub Actions: Job ${job.status} on branch ${{ github.ref }} in repository ${{ github.repository }}."
           }' \
-          https://chat.googleapis.com/v1/spaces/AAAAmPSh_pM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=aDgHjKYXcd0suiPWX96_AgxqNcIcKyeDsFb_K28ioWo
+        ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
