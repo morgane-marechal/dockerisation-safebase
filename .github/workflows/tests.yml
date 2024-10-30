@@ -16,3 +16,12 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
+
+      # Étape pour envoyer une notification à Google Chat
+      - name: Send notification to Google Chat
+        run: |
+          curl -X POST -H 'Content-Type: application/json' \
+          -d '{
+            "text": "🚀 Notification from GitHub Actions: Job ${job.status} on branch ${{ github.ref }} in repository ${{ github.repository }}."
+          }' \
+          ${{ secrets.test_webhook }}
