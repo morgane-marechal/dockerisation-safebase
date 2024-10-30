@@ -21,6 +21,6 @@ jobs:
         run: |
           curl -X POST -H 'Content-Type: application/json' \
           -d '{
-            "text": "🚀 Notification from GitHub Actions: Job ${job.status} on branch ${{ github.ref }} in repository ${{ github.repository }}."
+            "text": "🚀 Notification from GitHub Actions: Job '"${{ job.status }}"' on branch '"${{ github.ref }}"' in repository '"${{ github.repository }}"'."
           }' \
           ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
