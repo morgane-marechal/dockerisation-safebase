@@ -23,4 +23,4 @@ jobs:
           -d '{
             "text": "🚀 Notification from GitHub Actions: Job ${job.status} on branch ${{ github.ref }} in repository ${{ github.repository }}."
           }' \
-          ${{ secrets.test_webhook }}
+          ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
