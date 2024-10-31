@@ -1,53 +1,86 @@
-name: CI/CD Pipeline
-
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on:
   push:
     branches:
-      - master
+      - testChat
   pull_request:
     branches:
-      - master
-
+      - testChat
 jobs:
-  build:
+  Explore-GitHub-Actions:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '18'
-
-      # Lister les fichiers dans safebasefront pour débogage
-      - name: List files in safebasefront
-        run: ls -la safebasefront
-
-      # Construire l'image Docker pour le frontend
-      - name: Build Frontend Docker image
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository 2 is ${{ github.repository }}."
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - name: List files in the repository
         run: |
-          cd safebasefront
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/safebasefront:latest .
+          ls ${{ github.workspace }}
+      - run: echo "🍏 This job's status is ${{ job.status }}."
 
-      # Construire l'image Docker pour le backend
-      - name: Build Backend Docker image
+      # Étape pour envoyer une notification à Google Chat
+      - name: Send notification to Google Chat
         run: |
-          cd SafebaseBack
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/safebaseback:latest .
+          curl -X POST -H 'Content-Type: application/json' \
+          -d '{
+            "text": "🚀 Notification from GitHub Actions: Job '"${{ job.status }}"' on branch '"${{ github.ref }}"' in repository '"${{ github.repository }}"'."
+          }' \
+          ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
 
-      # Se connecter à Docker Hub
-      - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+# name: CI/CD Pipeline
 
-      # Pousser les images Docker
-      - name: Push Frontend Docker image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/safebasefront:latest
+# on:
+#   push:
+#     branches:
+#       - master
+#   pull_request:
+#     branches:
+#       - master
 
-      - name: Push Backend Docker image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/safebaseback:latest
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
 
-      # Se déconnecter de Docker Hub
-      - name: Log out of Docker Hub
-        run: docker logout
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v2
+
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: '18'
+
+#       # Lister les fichiers dans safebasefront pour débogage
+#       - name: List files in safebasefront
+#         run: ls -la safebasefront
+
+#       # Construire l'image Docker pour le frontend
+#       - name: Build Frontend Docker image
+#         run: |
+#           cd safebasefront
+#           docker build -t ${{ secrets.DOCKER_USERNAME }}/safebasefront:latest .
+
+#       # Construire l'image Docker pour le backend
+#       - name: Build Backend Docker image
+#         run: |
+#           cd SafebaseBack
+#           docker build -t ${{ secrets.DOCKER_USERNAME }}/safebaseback:latest .
+
+#       # Se connecter à Docker Hub
+#       - name: Log in to Docker Hub
+#         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+#       # Pousser les images Docker
+#       - name: Push Frontend Docker image
+#         run: docker push ${{ secrets.DOCKER_USERNAME }}/safebasefront:latest
+
+#       - name: Push Backend Docker image
+#         run: docker push ${{ secrets.DOCKER_USERNAME }}/safebaseback:latest
+
+#       # Se déconnecter de Docker Hub
+#       - name: Log out of Docker Hub
+#         run: docker logout
