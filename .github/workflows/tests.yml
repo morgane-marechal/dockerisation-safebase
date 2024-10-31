@@ -23,13 +23,23 @@ jobs:
       - run: echo "🍏 This job's status is ${{ job.status }}."
 
       # Étape pour envoyer une notification à Google Chat
-      - name: Send notification to Google Chat
-        run: |
-          curl -X POST -H 'Content-Type: application/json' \
-          -d '{
-            "text": "🚀 Notification from GitHub Actions: Job '"${{ job.status }}"' on branch '"${{ github.ref }}"' in repository '"${{ github.repository }}"'."
-          }' \
-          ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
+  google-chat-action:
+      name: Google Chat GitHub Action
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout
+          id: checkout
+          uses: actions/checkout@v4
+
+        # ... Run your build stuff or whatever ...
+
+        - name: Notify Google Chat
+          if: ${{ always() }} # Use always to ensure that the notification is also send on failure of former steps
+          uses: SimonScholz/google-chat-action@main
+          with:
+            webhookUrl: '${{ secrets.GOOGLE_CHAT_WEBHOOK }}'
+            jobStatus: '${{ job.status }}'
 
 # name: CI/CD Pipeline
 
