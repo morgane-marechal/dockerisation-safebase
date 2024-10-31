@@ -19,26 +19,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18'  # Ensure this matches your Node version
-
-      - name: Install dependencies for frontend
-        run: |
-          cd safebasefront
-          npm install
-
-      - name: Install dependencies for backend
-        run: |
-          cd SafebaseBack  # Adjust if your Fastify folder is named differently
-          npm install
-
-      - name: Build React app
-        run: |
-          cd safebasefront
-          npm run build
+          node-version: '18'
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-app:latest ./safebasefront  # Assurez-vous que ce chemin est correct
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
@@ -48,3 +33,4 @@ jobs:
 
       - name: Log out of Docker Hub
         run: docker logout
+
