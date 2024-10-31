@@ -21,6 +21,10 @@ jobs:
         with:
           node-version: '18'
 
+      # Lister les fichiers dans safebasefront pour débogage
+      - name: List files in safebasefront
+        run: ls -la safebasefront
+
       # Construire l'image Docker pour le frontend
       - name: Build Frontend Docker image
         run: |
