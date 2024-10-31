@@ -11,56 +11,24 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        
+
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18'  # Assurez-vous que cela correspond à votre version de Node
+          node-version: '18'  # Ensure this matches your Node version
 
       - name: Install dependencies for frontend
         run: |
           cd safebasefront
           npm install
 
-      - name: Build React app
+      - name: Install dependencies for backend
         run: |
-          cd safebasefront
-          npm run build
-
-      - name: Build Docker image
-        run: |
-          cd safebasefrontname: CI/CD Pipeline
-
-on:
-  push:
-    branches:
-      - master  # Change cette branche si nécessaire
-  pull_request:
-    branches:
-      - master
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'  # Change la version selon tes besoins
-
-      - name: Install dependencies
-        run: |
-          cd safebasefront  # Change ce chemin si ton dossier React est différent
-          npm install
-          cd ../SafebaseBack  # Change ce chemin si ton dossier Fastify est différent
+          cd SafebaseBack  # Adjust if your Fastify folder is named differently
           npm install
 
       - name: Build React app
@@ -71,16 +39,6 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/my-app:latest .
-          
-      - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-      - name: Push Docker image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/my-app:latest
-
-      - name: Log out of Docker Hub
-        run: docker logout
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-app:latest .
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
@@ -90,4 +48,3 @@ jobs:
 
       - name: Log out of Docker Hub
         run: docker logout
-
